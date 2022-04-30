@@ -11,10 +11,20 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('profiles', static function (Blueprint $table) {
             $table->id();
+            $table->string('first_name');
+            $table->string('last_name')->nullable();
+            //create a field to store an image of user.
+            $table->string('image')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('user_type')->nullable();
+            $table->string('department')->nullable();
+            $table->string('semester')->nullable();
+            $table->string('division')->nullable();
+            // More fields here...
             $table->timestamps();
         });
     }
@@ -24,7 +34,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('profiles');
     }
