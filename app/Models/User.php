@@ -50,7 +50,7 @@ class User extends Authenticatable
      * @return BelongsTo
      */
 
-    public function profile()
+    public function profile(): BelongsTo
     {
         return $this->belongsTo(Profile::class);
     }
@@ -66,6 +66,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
-
-
 }
