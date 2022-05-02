@@ -83,4 +83,28 @@ class AuthController extends Controller
 
         return response(['ok' => true, 'user' => new UserResource($user), 'access_token' => $accessToken->plainTextToken, 'token_details' => new TokenDetailsResource($accessToken), 'timestamp' => now()], 201);
     }
+
+
+    public function show(): Response|Application|ResponseFactory
+    {
+        return response(['ok' => true, 'user' => new UserResource(auth()->user()->load(['profile']))], 200);
+    }
+
+    /**
+     * Logouts a user by deleting the api token.
+     *
+     * @param Request $request
+     *
+     * @return Response|Application|ResponseFactory
+     */
+    public function logout(Request $request): Response|Application|ResponseFactory
+    {
+        try {
+            $request->user()->currentAccessToken()->delete();
+        } catch (Exception $e) {
+            return response(['ok' => false, 'message' => 'Log-out failed.', 'timestamp' => now()], 400);
+        }
+
+        return response(['ok' => true, 'message' => 'Logged out successfully.', 'timestamp' => now()], 200);
+    }
 }
