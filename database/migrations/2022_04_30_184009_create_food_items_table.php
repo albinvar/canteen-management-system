@@ -16,12 +16,11 @@ return new class extends Migration
         Schema::create('food_items', static function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
-            $table->string('image');
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->string('slug')->unique();
             $table->decimal('price', 8, 2);
-            $table->string('category');
             $table->foreignId('created_by')->constrained('users');
-
             $table->timestamps();
         });
     }

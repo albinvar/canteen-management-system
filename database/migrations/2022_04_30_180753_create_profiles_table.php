@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name')->nullable();
-            //create a field to store an image of user.
             $table->string('image')->nullable();
             $table->string('phone')->nullable();
             $table->string('user_type')->nullable();

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('ratings', static function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('food_item_id')->constrained('food_items');
             $table->integer('rating');
             $table->timestamps();
         });
