@@ -19,11 +19,13 @@ class Profile extends Model
         'image',
         'first_name',
         'last_name',
+        'address',
         'phone',
         'semester',
         'user_type',
         'department',
         'division',
+        'job_title',
     ];
 
     //protected casts

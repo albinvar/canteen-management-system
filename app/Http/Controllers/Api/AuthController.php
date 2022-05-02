@@ -7,6 +7,7 @@ use App\Http\Resources\TokenDetailsResource;
 use App\Http\Resources\UserResource;
 use App\Models\Profile;
 use App\Models\User;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -49,11 +50,21 @@ class AuthController extends Controller
         $validatedData['phone'] = PhoneNumber::make($validatedData['phone'])->formatE164();
 
         //create a new profile for the user.
-        $profile = Profile::create([
-            'first_name' => $validatedData['first_name'],
-            'last_name' => $validatedData['last_name'] ?? null,
-            'phone' => $validatedData['phone'] ?? null,
-        ]);
+        try {
+            $profile = Profile::create([
+                'first_name' => $validatedData['first_name'],
+                'last_name' => $validatedData['last_name'] ?? null,
+                'phone' => $validatedData['phone'] ?? null,
+                'address' => $validatedData['address'] ?? null,
+                'user_type' => $validatedData['user_type'] ?? null,
+                'department' => $validatedData['department'] ?? null,
+                'semester' => $validatedData['semester'] ?? null,
+                'division' => $validatedData['division'] ?? null,
+                'job_title' => $validatedData['job_title'] ?? null,
+            ]);
+        } catch (Exception $e) {
+            return response(['ok' => false, 'message' => 'Profile could not be created'], 400);
+        }
 
         //assign the created profile to the user
         $validatedData['profile_id'] = $profile->id;
@@ -62,9 +73,12 @@ class AuthController extends Controller
         $validatedData['role_id'] = 1;
 
         //create a new user with the validated data
-        $user = User::create((collect($validatedData))->only(['email', 'password', 'role_id', 'profile_id'])->toArray());
-
-        $accessToken = $user->createToken('authToken');
+        try {
+            $user = User::create((collect($validatedData))->only(['email', 'password', 'role_id', 'profile_id'])->toArray());
+            $accessToken = $user->createToken('authToken');
+        } catch (Exception $e) {
+            return response(['ok' => false, 'message' => "Registration failed due to a server error"], 400);
+        }
 
         return response(['ok' => true, 'user' => new UserResource($user), 'access_token' => $accessToken->plainTextToken, 'token_details' => new TokenDetailsResource($accessToken), 'timestamp' => now()], 201);
     }
