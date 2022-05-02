@@ -22,7 +22,7 @@ class LoginTest extends TestCase
      */
     public function test_check_if_validation_login_page_works(): void
     {
-        $response = $this->postJson('/api/login');
+        $response = $this->postJson(route('api.login'));
 
         $response->assertStatus(422)
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', false)
@@ -40,7 +40,7 @@ class LoginTest extends TestCase
      */
     public function test_check_if_validation_for_phone_field_works(): void
     {
-        $response = $this->postJson('/api/login', ['email' => 'Invalid Email']);
+        $response = $this->postJson(route('api.login'), ['email' => 'Invalid Email']);
 
         $response->assertStatus(422)
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', false)
@@ -58,7 +58,7 @@ class LoginTest extends TestCase
      */
     public function test_check_if_validation_login_page_passes(): void
     {
-        $response = $this->postJson('/api/login', ['email' => 'non-exixsting-email@gmail.com', 'password' => 'test12345']);
+        $response = $this->postJson(route('api.login'), ['email' => 'non-exixsting-email@gmail.com', 'password' => 'test12345']);
 
         $response->assertStatus(401)
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', false)
@@ -77,13 +77,14 @@ class LoginTest extends TestCase
         $user = User::factory()->create();
         $user->load(['profile']);
 
-        $response = $this->postJson('/api/login', ['email' => $user->email, 'password' => 'password']);
+        $response = $this->postJson(route('api.login'), ['email' => $user->email, 'password' => 'password']);
 
         $response->assertStatus(201);
 
         $response->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
             ->where('user.id', $user->id)
-            ->where('user.name', $user->name)
+            ->where('user.first_name', $user->profile->first_name)
+            ->where('user.last_name', $user->profile->last_name)
             ->where('user.email', $user->email)
             ->missing('password')
             ->has('access_token')
@@ -102,8 +103,35 @@ class LoginTest extends TestCase
             ['*']
         );
 
-        $response = $this->getJson('/api/user');
+        $response = $this->getJson(route('api.user'));
 
         $response->assertStatus(200);
+
+        $response->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+            ->etc());
     }
+
+
+    /**
+     * Check if logout works.
+     *
+     * @return void
+     */
+    public function test_check_if_user_can_logout(): void
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs(
+            $user,
+            ['*']
+        );
+
+        $response = $this->getJson(route('api.logout'));
+
+        $response->assertStatus(200);
+
+        $response->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+            ->etc());
+    }
+
 }

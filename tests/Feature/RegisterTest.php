@@ -23,7 +23,7 @@ class RegisterTest extends TestCase
      */
     #[NoReturn] public function test_check_if_validation_on_register_page_works(): void
     {
-        $response = $this->postJson('/api/register');
+        $response = $this->postJson(route('api.register'));
         $response->assertStatus(422)
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', false)
                 ->etc());
@@ -36,7 +36,7 @@ class RegisterTest extends TestCase
      */
     public function test_check_if_validation_for_email_field_works()
     {
-        $response = $this->postJson('/api/register', ['email' => 'invalid email']);
+        $response = $this->postJson(route('api.register'), ['email' => 'invalid email']);
 
         $response->assertStatus(422)
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', false)->has('errors.email')
@@ -54,7 +54,7 @@ class RegisterTest extends TestCase
 
         //create a profile instance to be used in the User instance.
         $profile = Profile::factory()->make();
-        $user = User::factory()->make();
+        $user = User::factory()->make(['profile_id' => null]);
 
         $user->setAttribute('password_confirmation', 'password');
 
@@ -65,11 +65,11 @@ class RegisterTest extends TestCase
 
         $data['password'] = 'password';
 
-        $response = $this->postJson('/api/register', $data);
+        $response = $this->postJson(route('api.register'), $data);
         $response->assertStatus(201)
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
                 ->where('user.id', $response['user']['id'])
-                ->where('user.name', $user->name)
+                ->where('user.first_name', $profile->first_name)
                 ->where('user.phone', PhoneNumber::make($profile->phone)->formatE164())
                 ->where('user.email', $user->email)
                 ->missing('password')
@@ -82,7 +82,7 @@ class RegisterTest extends TestCase
      *
      * @return void
      */
-    public function test_check_if_user_already_register()
+    public function test_check_if_user_already_register(): void
     {
         $this->seed(DatabaseSeeder::class);
         $user = User::factory()->create();
@@ -91,7 +91,7 @@ class RegisterTest extends TestCase
         $data = $user->toArray();
         $data += ['password' => 'password'];
 
-        $response = $this->postJson('/api/register', $data);
+        $response = $this->postJson(route('api.register'), $data);
 
         $response->assertStatus(422);
 
