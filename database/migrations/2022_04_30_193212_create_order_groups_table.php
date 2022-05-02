@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('order_groups', static function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('order_id')->constrained('orders');
             $table->uuid('uuid');
             $table->timestamps();
         });
