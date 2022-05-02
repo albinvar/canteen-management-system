@@ -5,10 +5,10 @@ namespace Tests\Feature;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+//use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
-use Propaganistas\LaravelPhone\PhoneNumber;
+//use Propaganistas\LaravelPhone\PhoneNumber;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -20,7 +20,7 @@ class LoginTest extends TestCase
      *
      * @return void
      */
-    public function test_check_if_vaildation_login_page_works(): void
+    public function test_check_if_validation_login_page_works(): void
     {
         $response = $this->postJson('/api/login');
 
@@ -56,9 +56,9 @@ class LoginTest extends TestCase
      *
      * @return void
      */
-    public function test_check_if_vaildation_login_page_passes(): void
+    public function test_check_if_validation_login_page_passes(): void
     {
-        $response = $this->postJson('/api/login', ['email' => 'unknown@gmail.com', 'password' => 'test12345']);
+        $response = $this->postJson('/api/login', ['email' => 'non-exixsting-email@gmail.com', 'password' => 'test12345']);
 
         $response->assertStatus(401)
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', false)
