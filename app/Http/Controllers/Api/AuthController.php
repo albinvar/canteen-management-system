@@ -3,10 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TokenDetailsResource;
+use App\Http\Resources\UserResource;
+use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use App\Http\Requests\Auth\RegisterPostRequest;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
+use Propaganistas\LaravelPhone\PhoneNumber;
 
 class AuthController extends Controller
 {
@@ -17,7 +24,6 @@ class AuthController extends Controller
     public function login(Request $request): Response|Application|ResponseFactory
     {
         $loginData = $request->validate([
-//            'phone' => 'numeric|digits_between:6,16|required',
             'email' => 'email|required',
             'password' => 'required',
         ]);
@@ -31,21 +37,35 @@ class AuthController extends Controller
         return response(['ok' => true, 'user' => auth()->user(), 'access_token' => $accessToken]);
     }
 
-    public function register(Request $request)
+    public function register(RegisterPostRequest $data): Response|Application|ResponseFactory
     {
-        $validatedData = $request->validate([
-            'name' => 'required|max:55',
-            'phone' => 'required|numeric|unique:users',
-            'email' => 'email|required|unique:users',
-            'password' => 'required|confirmed',
+        //get the validated data from the request
+        $validatedData = $data->validated();
+
+        //convert the password to hash
+        $validatedData['password'] = Hash::make($data->password);
+
+        // convert phone field value to an E164 format before storing to DB.
+        $validatedData['phone'] = PhoneNumber::make($validatedData['phone'])->formatE164();
+
+        //create a new profile for the user.
+        $profile = Profile::create([
+            'first_name' => $validatedData['first_name'],
+            'last_name' => $validatedData['last_name'] ?? null,
+            'phone' => $validatedData['phone'] ?? null,
         ]);
 
-        $validatedData['password'] = Hash::make($request->password);
+        //assign the created profile to the user
+        $validatedData['profile_id'] = $profile->id;
 
-        $user = User::create($validatedData);
+        //automatically set the role to user
+        $validatedData['role_id'] = 1;
 
-        $accessToken = $user->createToken('authToken')->plainTextToken;
+        //create a new user with the validated data
+        $user = User::create((collect($validatedData))->only(['email', 'password', 'role_id', 'profile_id'])->toArray());
 
-        return response(['user' => $user, 'access_token' => $accessToken], 201);
+        $accessToken = $user->createToken('authToken');
+
+        return response(['ok' => true, 'user' => new UserResource($user), 'access_token' => $accessToken->plainTextToken, 'token_details' => new TokenDetailsResource($accessToken), 'timestamp' => now()], 201);
     }
 }
