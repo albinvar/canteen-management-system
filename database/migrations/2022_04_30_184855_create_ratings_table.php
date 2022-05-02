@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('food_item_id')->constrained('food_items');
             $table->integer('rating');
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }

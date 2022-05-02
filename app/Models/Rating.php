@@ -13,7 +13,14 @@ class Rating extends Model
     protected $fillable = [
         'user_id',
         'food_item_id',
-        'rating'
+        'rating',
+        'comment',
+    ];
+
+    protected $casts = [
+        'user_id' => 'integer',
+        'food_item_id' => 'integer',
+        'rating' => 'integer',
     ];
 
     public function foodItem(): BelongsTo
