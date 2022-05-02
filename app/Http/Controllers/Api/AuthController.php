@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginPostRequest;
 use App\Http\Resources\TokenDetailsResource;
 use App\Http\Resources\UserResource;
 use App\Models\Profile;
@@ -22,20 +23,20 @@ class AuthController extends Controller
      * @param Request $request
      * @return Application|ResponseFactory|Response
      */
-    public function login(Request $request): Response|Application|ResponseFactory
+    public function login(LoginPostRequest $data): Response|Application|ResponseFactory
     {
-        $loginData = $request->validate([
-            'email' => 'email|required',
-            'password' => 'required',
-        ]);
+        $credentials = $data->validated();
 
-        if (!auth()->attempt($loginData)) {
-            return response(['ok' => false, 'message' => 'This User does not exist, check your details'], 400);
+        // gets the validated data from user.
+        $validated = $data->validated();
+
+        if (! auth()->attempt($validated)) {
+            return response(['ok' => false, 'message' => 'The provided credentials are incorrect.'], 401);
         }
 
-        $accessToken = auth()->user()->createToken('authToken')->plainTextToken;
+        $accessToken = auth()->user()->createToken('authToken');
 
-        return response(['ok' => true, 'user' => auth()->user(), 'access_token' => $accessToken]);
+        return response(['ok' => true, 'user' => new UserResource(auth()->user()->load(['profile'])), 'access_token' => $accessToken->plainTextToken, 'token_details' => new TokenDetailsResource($accessToken), 'timestamp' => now()], 201);
     }
 
     public function register(RegisterPostRequest $data): Response|Application|ResponseFactory
