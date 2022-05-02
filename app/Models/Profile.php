@@ -5,7 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
+use Propaganistas\LaravelPhone\Casts\E164PhoneNumberCast;
+use Propaganistas\LaravelPhone\PhoneNumber;
 
 class Profile extends Model
 {
@@ -22,6 +25,19 @@ class Profile extends Model
         'department',
         'division',
     ];
+
+    //protected casts
+    protected $casts = [
+        'phone' => E164PhoneNumberCast::class,
+    ];
+
+    #[ArrayShape(['type' => "mixed", 'country' => "mixed"])] public function phone_info()
+    {
+        return [
+            'type' => PhoneNumber::make($this->phone)->getType(),
+            'country' => PhoneNumber::make($this->phone)->getCountry(),
+        ];
+    }
 
     public function user(): BelongsTo
     {
