@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginPostRequest;
+use App\Http\Requests\Auth\RegisterPostRequest;
 use App\Http\Resources\TokenDetailsResource;
 use App\Http\Resources\UserResource;
 use App\Models\Profile;
@@ -12,7 +13,6 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use App\Http\Requests\Auth\RegisterPostRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Propaganistas\LaravelPhone\PhoneNumber;
@@ -20,25 +20,36 @@ use Propaganistas\LaravelPhone\PhoneNumber;
 class AuthController extends Controller
 {
     /**
-     * @param Request $request
+     * Login user and return token
+     *
+     * @param LoginPostRequest $data
      * @return Application|ResponseFactory|Response
      */
     public function login(LoginPostRequest $data): Response|Application|ResponseFactory
     {
-        $credentials = $data->validated();
-
         // gets the validated data from user.
         $validated = $data->validated();
 
+        //attempts to login the user.
         if (! auth()->attempt($validated)) {
+            //if the attempt fails, return a response.
             return response(['ok' => false, 'message' => 'The provided credentials are incorrect.'], 401);
         }
 
+        //if the attempt succeeds, return a response.
+        //get the access token.
+        //send the access token to the client.
         $accessToken = auth()->user()->createToken('authToken');
 
         return response(['ok' => true, 'user' => new UserResource(auth()->user()->load(['profile'])), 'access_token' => $accessToken->plainTextToken, 'token_details' => new TokenDetailsResource($accessToken), 'timestamp' => now()], 201);
     }
 
+    /**
+     * Register a new user to the system.
+     *
+     * @param RegisterPostRequest $data
+     * @return Response|Application|ResponseFactory
+     */
     public function register(RegisterPostRequest $data): Response|Application|ResponseFactory
     {
         //get the validated data from the request
