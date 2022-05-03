@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\OrderGroup;
-use App\Http\Requests\StoreOrderGroupRequest;
-use App\Http\Requests\UpdateOrderGroupRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
+use App\Models\Role;
 
-class OrderGroupController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +32,10 @@ class OrderGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreOrderGroupRequest  $request
+     * @param  \App\Http\Requests\StoreRoleRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreOrderGroupRequest $request)
+    public function store(StoreRoleRequest $request)
     {
         //
     }
@@ -42,10 +43,10 @@ class OrderGroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\OrderGroup  $orderGroup
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function show(OrderGroup $orderGroup)
+    public function show(Role $role)
     {
         //
     }
@@ -53,10 +54,10 @@ class OrderGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\OrderGroup  $orderGroup
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function edit(OrderGroup $orderGroup)
+    public function edit(Role $role)
     {
         //
     }
@@ -64,11 +65,11 @@ class OrderGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateOrderGroupRequest  $request
-     * @param  \App\Models\OrderGroup  $orderGroup
+     * @param  \App\Http\Requests\UpdateRoleRequest  $request
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateOrderGroupRequest $request, OrderGroup $orderGroup)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
         //
     }
@@ -76,10 +77,10 @@ class OrderGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\OrderGroup  $orderGroup
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OrderGroup $orderGroup)
+    public function destroy(Role $role)
     {
         //
     }

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\DateBasedFoodItem;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDateBasedFoodItemRequest;
 use App\Http\Requests\UpdateDateBasedFoodItemRequest;
+use App\Models\DateBasedFoodItem;
 
 class DateBasedFoodItemController extends Controller
 {

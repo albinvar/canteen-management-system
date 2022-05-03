@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\FoodItem;
-use App\Http\Requests\StoreFoodItemRequest;
-use App\Http\Requests\UpdateFoodItemRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreOrderStatusRequest;
+use App\Http\Requests\UpdateOrderStatusRequest;
+use App\Models\OrderStatus;
 
-class FoodItemController extends Controller
+class OrderStatusController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +32,10 @@ class FoodItemController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreFoodItemRequest  $request
+     * @param  \App\Http\Requests\StoreOrderStatusRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreFoodItemRequest $request)
+    public function store(StoreOrderStatusRequest $request)
     {
         //
     }
@@ -42,10 +43,10 @@ class FoodItemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\FoodItem  $foodItem
+     * @param  \App\Models\OrderStatus  $orderStatus
      * @return \Illuminate\Http\Response
      */
-    public function show(FoodItem $foodItem)
+    public function show(OrderStatus $orderStatus)
     {
         //
     }
@@ -53,10 +54,10 @@ class FoodItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\FoodItem  $foodItem
+     * @param  \App\Models\OrderStatus  $orderStatus
      * @return \Illuminate\Http\Response
      */
-    public function edit(FoodItem $foodItem)
+    public function edit(OrderStatus $orderStatus)
     {
         //
     }
@@ -64,11 +65,11 @@ class FoodItemController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateFoodItemRequest  $request
-     * @param  \App\Models\FoodItem  $foodItem
+     * @param  \App\Http\Requests\UpdateOrderStatusRequest  $request
+     * @param  \App\Models\OrderStatus  $orderStatus
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateFoodItemRequest $request, FoodItem $foodItem)
+    public function update(UpdateOrderStatusRequest $request, OrderStatus $orderStatus)
     {
         //
     }
@@ -76,10 +77,10 @@ class FoodItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\FoodItem  $foodItem
+     * @param  \App\Models\OrderStatus  $orderStatus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FoodItem $foodItem)
+    public function destroy(OrderStatus $orderStatus)
     {
         //
     }
