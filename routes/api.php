@@ -30,5 +30,6 @@ Route::group(['as' => 'api.'], static function () {
 
 
     //create a resource for categories
-    Route::apiResource('categories', CategoryController::class)->names('categories');
+    Route::apiResource('categories', CategoryController::class)->names('categories')->only(['index', 'show']);
+    Route::get('categories/{category:slug}/products', [CategoryController::class, 'products'])->name('categories.products');
 });

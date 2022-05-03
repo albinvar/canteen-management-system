@@ -52,11 +52,31 @@ class CategoryController extends Controller
      * Display the specified resource.
      *
      * @param Category $category
-     * @return Response
+     * @return JsonResponse
      */
-    public function show(Category $category)
+    public function show(Category $category): JsonResponse
     {
-        //
+        try {
+            return response()->json(['ok' => true,  'message' => "Successfully retrieved", 'category' => $category, 'timestamp' => now()],200);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Category $category
+     * @return JsonResponse
+     */
+    public function products(Category $category): JsonResponse
+    {
+        try {
+            $products = $category->food_items()->toBase()->get();
+            return response()->json(['ok' => true,  'message' => "Successfully retrieved {$products->count()} records", 'category' => $category, 'products' => $products, 'timestamp' => now()],200);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
