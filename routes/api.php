@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,8 @@ Route::group(['as' => 'api.'], static function () {
         Route::get('logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('user', [AuthController::class, 'show'])->name('user');
     });
+
+
+    //create a resource for categories
+    Route::apiResource('categories', CategoryController::class)->names('categories');
 });
