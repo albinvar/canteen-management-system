@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -59,18 +60,24 @@ class CategoryTest extends TestCase
 
 
     //create a test to check if a category can be retrieved by slug
-    public function test_retrieve_one_category_by_slug(): void
+    public function test_retrieve_products_by_category_slug(): void
     {
         // Create a product.
-        $product = Category::factory()->create();
+        $category = Category::factory()->create();
+        $products = Product::factory(10)->create(['category_id' => $category->id]);
 
-        $response = $this->getJson(route('api.categories.products', $product->slug));
+        $response = $this->getJson(route('api.categories.products', $category->slug));
 
         $response->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)->dd()
-                ->where('product.name', $product->name)
-                ->where('product.description', $product->description)
-                ->where('product.slug', $product->slug)
+            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+                ->where('category.name', $category->name)
+                ->where('products.0.name', $products[0]->name)
+                ->where('products.0.description', $products[0]->description)
+                ->where('products.0.slug', $products[0]->slug)
+                ->where('products.9.name', $products[9]->name)
+                ->where('products.9.description', $products[9]->description)
+                ->where('products.9.slug', $products[9]->slug)
+                ->missing('products.10')
                 ->missing('categories.1')
                 ->etc());
     }
