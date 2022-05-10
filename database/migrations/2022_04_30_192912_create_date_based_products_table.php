@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('food_items', static function (Blueprint $table) {
+        Schema::create('date_based_products', static function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->string('slug')->unique();
-            $table->decimal('price', 8, 2);
+            $table->foreignId('product_id')->constrained('products');
+            $table->date('date');
+            $table->integer('quantity')->nullable();
             $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('food_items');
+        Schema::dropIfExists('date_based_products');
     }
 };

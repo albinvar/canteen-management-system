@@ -11,7 +11,7 @@ class DateBasedFoodItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'food_item_id',
+        'product_id',
         'date',
         'quantity',
         'price',

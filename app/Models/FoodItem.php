@@ -43,7 +43,7 @@ class FoodItem extends Model
 
     public function ratings(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'ratings', 'food_item_id', 'user_id');
+        return $this->belongsToMany(User::class, 'ratings', 'product_id', 'user_id');
     }
 
     //calculate average rating

@@ -72,7 +72,7 @@ class CategoryController extends Controller
     public function products(Category $category): JsonResponse
     {
         try {
-            $products = $category->food_items()->toBase()->get();
+            $products = $category->products()->toBase()->get();
             return response()->json(['ok' => true,  'message' => "Successfully retrieved {$products->count()} records", 'category' => $category, 'products' => $products, 'timestamp' => now()],200);
         } catch (Exception $e) {
             return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
