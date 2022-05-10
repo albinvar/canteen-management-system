@@ -27,7 +27,7 @@ Route::group(['as' => 'api.'], static function () {
         Route::get('logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('user', [AuthController::class, 'show'])->name('user');
 
-        Route::apiResource('categories', CategoryController::class)->names('categories')->only(['index', 'show', 'store']);
+        Route::apiResource('categories', CategoryController::class)->names('categories')->only(['index', 'show', 'store', 'update', 'destroy']);
     });
 
 

@@ -77,26 +77,22 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Category $category
-     * @return Response
-     */
-    public function edit(Category $category)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param UpdateCategoryRequest $request
      * @param Category $category
-     * @return Response
+     * @return JsonResponse
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        try {
+            $category->update($validated);
+            return response()->json(['ok' => true, 'message' => "Successfully updated {$category->name}", 'category' => $category, 'timestamp' => now()], 200);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**

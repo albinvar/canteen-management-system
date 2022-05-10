@@ -284,5 +284,42 @@ class CategoryTest extends TestCase
         ]);
     }
 
+    // check if a user is able to update a category.
+
+    /**
+     * @return void
+     */
+
+    public function test_user_can_update_category(): void
+    {
+        $user = User::factory()->create();
+
+        $category = Category::factory()->create([
+            'name' => 'test',
+            'description' => 'New Category Description',
+            'slug' => 'test-clone-category',
+        ]);
+
+        $this->actingAs($user)
+            ->json('PUT', route('api.categories.update', $category->id), [
+                'name' => 'New Category',
+                'description' => 'New Category Description',
+                'slug' => 'new-category',
+            ])
+            ->assertStatus(200)
+            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+                ->where('category.name', 'New Category')
+                ->where('category.description', 'New Category Description')
+                ->where('category.slug', 'new-category')
+                ->etc());
+
+        $this->assertDatabaseHas('categories', [
+            'name' => 'New Category',
+            'description' => 'New Category Description',
+            'slug' => 'new-category',
+        ]);
+    }
+
+    // check if a user is able to delete a category.
 
 }
