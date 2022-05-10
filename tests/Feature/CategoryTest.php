@@ -322,4 +322,32 @@ class CategoryTest extends TestCase
 
     // check if a user is able to delete a category.
 
+    /**
+     * @return void
+     */
+
+    public function test_user_can_delete_category(): void
+
+    {
+        $user = User::factory()->create();
+
+        $category = Category::factory()->create([
+            'name' => 'test',
+            'description' => 'New Category Description',
+            'slug' => 'test-clone-category',
+        ]);
+
+        $this->actingAs($user)
+            ->json('DELETE', route('api.categories.destroy', $category->id))
+            ->assertStatus(200)
+            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+                ->etc());
+
+        $this->assertDatabaseMissing('categories', [
+            'name' => 'test',
+            'description' => 'New Category Description',
+            'slug' => 'test-clone-category',
+        ]);
+    }
+
 }
