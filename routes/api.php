@@ -26,10 +26,12 @@ Route::group(['as' => 'api.'], static function () {
     Route::group(['middleware' => 'auth:sanctum'], static function () {
         Route::get('logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('user', [AuthController::class, 'show'])->name('user');
+
+        Route::apiResource('categories', CategoryController::class)->names('categories')->only(['index', 'show', 'store']);
     });
 
 
     //create a resource for categories
-    Route::apiResource('categories', CategoryController::class)->names('categories')->only(['index', 'show', 'store']);
+    Route::apiResource('categories', CategoryController::class)->names('categories')->only('index', 'show');
     Route::get('categories/{category:slug}/products', [CategoryController::class, 'products'])->name('categories.products');
 });
