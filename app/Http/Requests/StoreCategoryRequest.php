@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use JetBrains\PhpStorm\ArrayShape;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -11,9 +14,9 @@ class StoreCategoryRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -21,10 +24,26 @@ class StoreCategoryRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    #[ArrayShape(['name' => "string", 'description' => "string", 'slug' => "string"])] public function rules(): array
     {
         return [
-            //
+            'name' => 'required|unique:categories',
+            'description' => 'required',
+            'slug' => 'required|unique:categories',
         ];
+    }
+
+    /**
+     * @param Validator $validator
+     * @return void
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        $response = [
+            'ok' => false,
+            'message' => $validator->errors()->first(),
+            'errors' => $validator->errors(),
+        ];
+        throw new HttpResponseException(response()->json($response, 422));
     }
 }
