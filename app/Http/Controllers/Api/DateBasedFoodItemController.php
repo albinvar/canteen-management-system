@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDateBasedFoodItemRequest;
 use App\Http\Requests\UpdateDateBasedFoodItemRequest;
-use App\Models\DateBasedFoodItem;
+use App\Models\DateBasedProducts;
 
 class DateBasedFoodItemController extends Controller
 {
@@ -43,10 +43,10 @@ class DateBasedFoodItemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\DateBasedFoodItem  $dateBasedFoodItem
+     * @param  \App\Models\DateBasedProducts  $dateBasedFoodItem
      * @return \Illuminate\Http\Response
      */
-    public function show(DateBasedFoodItem $dateBasedFoodItem)
+    public function show(DateBasedProducts $dateBasedFoodItem)
     {
         //
     }
@@ -54,10 +54,10 @@ class DateBasedFoodItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\DateBasedFoodItem  $dateBasedFoodItem
+     * @param  \App\Models\DateBasedProducts  $dateBasedFoodItem
      * @return \Illuminate\Http\Response
      */
-    public function edit(DateBasedFoodItem $dateBasedFoodItem)
+    public function edit(DateBasedProducts $dateBasedFoodItem)
     {
         //
     }
@@ -66,10 +66,10 @@ class DateBasedFoodItemController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateDateBasedFoodItemRequest  $request
-     * @param  \App\Models\DateBasedFoodItem  $dateBasedFoodItem
+     * @param  \App\Models\DateBasedProducts  $dateBasedFoodItem
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateDateBasedFoodItemRequest $request, DateBasedFoodItem $dateBasedFoodItem)
+    public function update(UpdateDateBasedFoodItemRequest $request, DateBasedProducts $dateBasedFoodItem)
     {
         //
     }
@@ -77,10 +77,10 @@ class DateBasedFoodItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\DateBasedFoodItem  $dateBasedFoodItem
+     * @param  \App\Models\DateBasedProducts  $dateBasedFoodItem
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DateBasedFoodItem $dateBasedFoodItem)
+    public function destroy(DateBasedProducts $dateBasedFoodItem)
     {
         //
     }

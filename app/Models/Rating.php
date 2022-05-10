@@ -25,7 +25,7 @@ class Rating extends Model
 
     public function foodItem(): BelongsTo
     {
-        return $this->belongsTo(FoodItem::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function user(): BelongsTo

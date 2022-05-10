@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\DateBasedFoodItem>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\DateBasedProducts>
  */
 class DateBasedFoodItemFactory extends Factory
 {
