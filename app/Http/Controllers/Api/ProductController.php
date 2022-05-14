@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateFoodItemRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Exception;
+use http\Env\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
@@ -20,6 +21,10 @@ class ProductController extends Controller
      */
     public function index(): JsonResponse
     {
+        if (auth()->user()->cannot('create', Product::class)) {
+            abort(403);
+        }
+
         try {
             $products = Product::toBase()->get();
             return response()->json(['ok' => true,  'message' => "Successfully retrieved {$products->count()} records", 'products' => $products, 'timestamp' => now()],200);

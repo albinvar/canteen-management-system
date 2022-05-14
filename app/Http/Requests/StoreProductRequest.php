@@ -13,7 +13,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->isSuperAdmin();
+        return auth()->user()->isAdmin();
     }
 
     /**
