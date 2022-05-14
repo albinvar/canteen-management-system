@@ -36,7 +36,7 @@ Route::group(['as' => 'api.'], static function () {
     Route::get('categories/{category:slug}/products', [CategoryController::class, 'products'])->name('categories.products');
 
     //create a resource for products
-    Route::group(['as' => 'api.admin.', 'middleware' => 'auth:sanctum'], static function () {
+    Route::group(['as' => 'admin.', 'middleware' => 'auth:sanctum'], static function () {
         Route::apiResource('products', ProductController::class)->names('products')->only('index', 'show', 'store', 'update', 'destroy');
     });
 });
