@@ -66,4 +66,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
+    //check if the role is an admin.
+
+    /**
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role->name === 'admin';
+    }
 }

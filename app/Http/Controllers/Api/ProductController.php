@@ -3,85 +3,96 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreFoodItemRequest;
+use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateFoodItemRequest;
+use App\Models\Category;
 use App\Models\Product;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
-class FoodItemController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        try {
+            $products = Product::toBase()->get();
+            return response()->json(['ok' => true,  'message' => "Successfully retrieved {$products->count()} records", 'products' => $products, 'timestamp' => now()],200);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreFoodItemRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreProductRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreFoodItemRequest $request)
+    public function store(StoreProductRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        try {
+            $category = Product::create($validated);
+            return response()->json(['ok' => true, 'message' => "Successfully created {$category->name}", 'category' => $category, 'timestamp' => now()], 201);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $foodItem
-     * @return \Illuminate\Http\Response
+     * @param Product $product
+     * @return JsonResponse
      */
-    public function show(Product $foodItem)
+    public function show(Product $product): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Product  $foodItem
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Product $foodItem)
-    {
-        //
+        try {
+            return response()->json(['ok' => true, 'message' => "Successfully retrieved {$product->name}", 'product' => $product, 'timestamp' => now()], 200);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateFoodItemRequest  $request
-     * @param  \App\Models\Product  $foodItem
-     * @return \Illuminate\Http\Response
+     * @param UpdateFoodItemRequest $request
+     * @param Product $product
+     * @return JsonResponse
      */
-    public function update(UpdateFoodItemRequest $request, Product $foodItem)
+    public function update(UpdateFoodItemRequest $request, Product $product): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        try {
+            $product->update($validated);
+            return response()->json(['ok' => true, 'message' => "Successfully updated {$product->name}", 'product' => $product, 'timestamp' => now()], 200);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $foodItem
-     * @return \Illuminate\Http\Response
+     * @param Product $product
+     * @return JsonResponse
      */
-    public function destroy(Product $foodItem)
+    public function destroy(Product $product): JsonResponse
     {
-        //
+        try {
+            $product->delete();
+            return response()->json(['ok' => true, 'message' => "Successfully deleted {$product->name}", 'timestamp' => now()], 200);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 }
