@@ -22,7 +22,7 @@ class ProductController extends Controller
     public function index(): JsonResponse
     {
         if (auth()->user()->cannot('create', Product::class)) {
-            abort(403);
+            return response()->json(['ok' => false,  'message' => "You can't perform this operation", 'timestamp' => now()],403);
         }
 
         try {
