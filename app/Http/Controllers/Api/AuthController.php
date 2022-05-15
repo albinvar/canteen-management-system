@@ -59,7 +59,9 @@ class AuthController extends Controller
         $validatedData['password'] = Hash::make($data->password);
 
         // convert phone field value to an E164 format before storing to DB.
-        $validatedData['phone'] = PhoneNumber::make($validatedData['phone'])->formatE164();
+        if(isset($validatedData['phone'])) {
+            $validatedData['phone'] = PhoneNumber::make($validatedData['phone'])->formatE164();
+        }
 
         //create a new profile for the user.
         try {
