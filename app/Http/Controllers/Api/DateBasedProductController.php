@@ -114,11 +114,16 @@ class DateBasedProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param DateBasedProduct $dateBasedFoodItem
-     * @return Response
+     * @param DateBasedProduct $dateBasedProduct
+     * @return JsonResponse
      */
-    public function destroy(DateBasedProduct $dateBasedFoodItem)
+    public function destroy(DateBasedProduct $dateBasedProduct): JsonResponse
     {
-        //
+        try {
+            $dateBasedProduct->delete();
+            return response()->json(['ok' => true, 'message' => 'Successfully deleted product', 'timestamp' => now()], 201);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 }

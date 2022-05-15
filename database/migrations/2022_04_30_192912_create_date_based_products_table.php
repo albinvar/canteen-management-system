@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -41,6 +41,7 @@ Route::group(['as' => 'api.'], static function () {
     Route::get('products/{date}', [DateBasedProductController::class, 'getMenuWithDate'])->name('products.date');
     Route::post('products/create', [DateBasedProductController::class, 'store'])->name('products.date.store');
     Route::put('products/{dateBasedProduct}', [DateBasedProductController::class, 'update'])->name('products.date.update');
+    Route::delete('products/{dateBasedProduct}', [DateBasedProductController::class, 'destroy'])->name('products.date.destroy');
 
     //create a resource for products
     Route::group(['as' => 'admin.', 'middleware' => 'auth:sanctum'], static function () {
