@@ -6,82 +6,82 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCartRequest;
 use App\Http\Requests\UpdateCartRequest;
 use App\Models\Cart;
+use App\Models\DateBasedProduct;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class CartController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        try {
+            $carts = Cart::all();
+            return response()->json(['ok' => true, 'message' => "Successfully Retrieved", 'cart' => $carts->load(['product.category']), 'timestamp' => now()], 200);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreCartRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreCartRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreCartRequest $request)
+    public function store(StoreCartRequest $request): JsonResponse
     {
-        //
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cart $cart)
-    {
-        //
-    }
+        $validated['user_id'] = auth()->id();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cart $cart)
-    {
-        //
+        try {
+            $cart = Cart::create($validated);
+            return response()->json(['ok' => true, 'message' => "Added to Cart Successfully", 'cart' => $cart->load(['product.category']), 'timestamp' => now()], 201);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateCartRequest  $request
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
+     * @param UpdateCartRequest $request
+     * @param Cart $cart
+     * @return JsonResponse
      */
     public function update(UpdateCartRequest $request, Cart $cart)
     {
-        //
+        $validated = $request->validated();
+
+        $validated['user_id'] = auth()->id();
+
+        try {
+            $cart->update($validated);
+            return response()->json(['ok' => true, 'message' => "Updated Cart Successfully", 'cart' => $cart->load(['product.category']), 'timestamp' => now()], 201);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
+     * @param Cart $cart
+     * @return JsonResponse
      */
-    public function destroy(Cart $cart)
+    public function destroy(Cart $cart): JsonResponse
     {
-        //
+        try {
+            $cart->delete();
+            return response()->json(['ok' => true, 'message' => "Removed item from cart", 'timestamp' => now()], 200);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 }

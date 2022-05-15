@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\DateBasedProduct;
+use App\Models\User;
 
 class Cart extends Model
 {
@@ -11,18 +14,18 @@ class Cart extends Model
 
     protected $fillable = [
         'user_id',
-        'product_id',
+        'date_based_product_id',
         'quantity'
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
-    public function product()
+    public function product(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Product');
+        return $this->belongsTo(DateBasedProduct::class);
     }
 
     public function getTotalPriceAttribute(): float|int

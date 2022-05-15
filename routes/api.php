@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DateBasedProductController;
 use App\Http\Controllers\Api\ProductController;
@@ -42,6 +43,14 @@ Route::group(['as' => 'api.'], static function () {
     Route::post('products/create', [DateBasedProductController::class, 'store'])->name('products.date.store');
     Route::put('products/{dateBasedProduct}', [DateBasedProductController::class, 'update'])->name('products.date.update');
     Route::delete('products/{dateBasedProduct}', [DateBasedProductController::class, 'destroy'])->name('products.date.destroy');
+
+    //cart endpoints.
+    Route::get('cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('cart/', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::put('cart/{cart}', [CartController::class, 'update'])->name('cart.update');
+
+    Route::post('checkout', [CartController::class, 'checkout'])->name('checkout');
 
     //create a resource for products
     Route::group(['as' => 'admin.', 'middleware' => 'auth:sanctum'], static function () {

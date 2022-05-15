@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreCartRequest extends FormRequest
 {
@@ -11,9 +12,9 @@ class StoreCartRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return Auth::check();
     }
 
     /**
@@ -24,7 +25,8 @@ class StoreCartRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'date_based_product_id' => 'required|exists:date_based_products,id',
+            'quantity' => 'required|integer|min:1|max:10',
         ];
     }
 }

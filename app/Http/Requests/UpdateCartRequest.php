@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateCartRequest extends FormRequest
 {
@@ -11,9 +12,9 @@ class UpdateCartRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return Auth::check();
     }
 
     /**
@@ -24,7 +25,7 @@ class UpdateCartRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'quantity' => 'required|numeric|min:1|max:10',
         ];
     }
 }
