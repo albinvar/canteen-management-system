@@ -180,4 +180,35 @@ class DateBasedProductTest extends TestCase
                 ->where('product.product.category.name', $product->category->name)
                 ->etc());
     }
+
+    //check if an admin is able to delete a date based product.
+
+    public function test_it_deletes_a_date_based_product(): void
+    {
+        $admin = User::factory()->create(['role_id' => 3]);
+
+        $this->actingAs($admin);
+
+        $product = Product::factory()->create();
+        $dateBasedProduct = DateBasedProduct::factory()->create([
+            'product_id' => $product->id,
+            'date' => now()->addDay()->format('Y-m-d')
+        ]);
+
+
+        $this->actingAs($admin)
+            ->json('DELETE', route('api.products.date.destroy', [
+                'dateBasedProduct' => $dateBasedProduct->id,
+            ]))
+            ->assertStatus(201)
+            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+                ->etc());
+
+        //assert that it's deleted.
+        $this->assertSoftDeleted('date_based_products', [
+            'product_id' => $product->id,
+            'date' => now()->addDay()->format('Y-m-d')
+        ]);
+    }
+
 }
