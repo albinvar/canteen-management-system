@@ -32,7 +32,7 @@ class RegisterPostRequest extends FormRequest
             'first_name' => ['required', 'string', 'max:55'],
             'last_name' => [ 'sometimes', 'nullable', 'string', 'max:55'],
             'image' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'phone' => ['sometimes', 'nullable', 'max:55', Rule::phone()->detect(), new AlreadyRegisteredPhoneRule()],
+            'phone' => ['required', 'max:55', Rule::phone()->detect(), new AlreadyRegisteredPhoneRule()],
             'user_type' => ['sometimes', 'string', 'max:55', 'in:student,staff,employee,other'],
             'department' => ['sometimes', 'string', 'max:55', 'in:engineering,science,business,other'],
             'semester' => ['sometimes', 'string', 'max:55', 'in:first,second,third,fourth,fifth,sixth,seventh,eighth,ninth,tenth,eleventh,twelfth,other'],

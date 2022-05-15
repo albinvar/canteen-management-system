@@ -43,6 +43,9 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
 
+        //add created_by field to tne validated data
+        $validated['created_by'] = auth()->id();
+
         try {
             $category = Product::create($validated);
             return response()->json(['ok' => true, 'message' => "Successfully created {$category->name}", 'category' => $category, 'timestamp' => now()], 201);

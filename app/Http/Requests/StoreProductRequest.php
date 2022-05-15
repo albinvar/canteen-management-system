@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\Product;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreProductRequest extends FormRequest
 {
@@ -28,7 +30,23 @@ class StoreProductRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category_id' => 'required|exists:categories,id',
+            'slug' => 'required|string|max:255|unique:products,slug',
         ];
+    }
+
+    /**
+     * @param Validator $validator
+     * @return void
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        $response = [
+            'ok' => false,
+            'message' => $validator->errors()->first(),
+            'errors' => $validator->errors(),
+        ];
+        throw new HttpResponseException(response()->json($response, 422));
     }
 }
