@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DateBasedProductController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,11 @@ Route::group(['as' => 'api.'], static function () {
     //create a resource for categories
     Route::apiResource('categories', CategoryController::class)->names('categories')->only('index', 'show');
     Route::get('categories/{category:slug}/products', [CategoryController::class, 'products'])->name('categories.products');
+
+    //daybased products
+    Route::get('products/today', [DateBasedProductController::class, 'getTodaysMenu'])->name('products.today');
+    Route::get('products/{date}', [DateBasedProductController::class, 'getMenuWithDate'])->name('products.date');
+    Route::post('products/create', [DateBasedProductController::class, 'store'])->name('products.date.store');
 
     //create a resource for products
     Route::group(['as' => 'admin.', 'middleware' => 'auth:sanctum'], static function () {

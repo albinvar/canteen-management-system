@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\DateBasedProducts;
+use App\Models\DateBasedProduct;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class DateBasedFoodItemPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\DateBasedProducts  $dateBasedFoodItem
+     * @param  \App\Models\DateBasedProduct  $dateBasedFoodItem
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, DateBasedProducts $dateBasedFoodItem)
+    public function view(User $user, DateBasedProduct $dateBasedFoodItem)
     {
         //
     }
@@ -48,10 +48,10 @@ class DateBasedFoodItemPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\DateBasedProducts  $dateBasedFoodItem
+     * @param  \App\Models\DateBasedProduct  $dateBasedFoodItem
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, DateBasedProducts $dateBasedFoodItem)
+    public function update(User $user, DateBasedProduct $dateBasedFoodItem)
     {
         //
     }
@@ -60,10 +60,10 @@ class DateBasedFoodItemPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\DateBasedProducts  $dateBasedFoodItem
+     * @param  \App\Models\DateBasedProduct  $dateBasedFoodItem
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, DateBasedProducts $dateBasedFoodItem)
+    public function delete(User $user, DateBasedProduct $dateBasedFoodItem)
     {
         //
     }
@@ -72,10 +72,10 @@ class DateBasedFoodItemPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\DateBasedProducts  $dateBasedFoodItem
+     * @param  \App\Models\DateBasedProduct  $dateBasedFoodItem
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, DateBasedProducts $dateBasedFoodItem)
+    public function restore(User $user, DateBasedProduct $dateBasedFoodItem)
     {
         //
     }
@@ -84,10 +84,10 @@ class DateBasedFoodItemPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\DateBasedProducts  $dateBasedFoodItem
+     * @param  \App\Models\DateBasedProduct  $dateBasedFoodItem
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, DateBasedProducts $dateBasedFoodItem)
+    public function forceDelete(User $user, DateBasedProduct $dateBasedFoodItem)
     {
         //
     }
