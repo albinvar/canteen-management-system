@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\DateBasedProductController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
@@ -50,7 +51,7 @@ Route::group(['as' => 'api.'], static function () {
     Route::delete('cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::put('cart/{cart}', [CartController::class, 'update'])->name('cart.update');
 
-    Route::post('checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::post('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 
     //create a resource for products
     Route::group(['as' => 'admin.', 'middleware' => 'auth:sanctum'], static function () {

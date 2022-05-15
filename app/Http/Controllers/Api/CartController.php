@@ -22,7 +22,7 @@ class CartController extends Controller
     {
         try {
             $carts = Cart::all();
-            return response()->json(['ok' => true, 'message' => "Successfully Retrieved", 'cart' => $carts->load(['product.category']), 'timestamp' => now()], 200);
+            return response()->json(['ok' => true, 'message' => "Successfully Retrieved", 'cart' => $carts->load(['date_based_product.product.category']), 'timestamp' => now()], 200);
         } catch (Exception $e) {
             return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
         }
@@ -42,7 +42,7 @@ class CartController extends Controller
 
         try {
             $cart = Cart::create($validated);
-            return response()->json(['ok' => true, 'message' => "Added to Cart Successfully", 'cart' => $cart->load(['product.category']), 'timestamp' => now()], 201);
+            return response()->json(['ok' => true, 'message' => "Added to Cart Successfully", 'cart' => $cart->load(['date_based_product.product.category']), 'timestamp' => now()], 201);
         } catch (Exception $e) {
             return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
         }
@@ -63,7 +63,7 @@ class CartController extends Controller
 
         try {
             $cart->update($validated);
-            return response()->json(['ok' => true, 'message' => "Updated Cart Successfully", 'cart' => $cart->load(['product.category']), 'timestamp' => now()], 201);
+            return response()->json(['ok' => true, 'message' => "Updated Cart Successfully", 'cart' => $cart->load(['date_based_product.product.category']), 'timestamp' => now()], 201);
         } catch (Exception $e) {
             return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
         }

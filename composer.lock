@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0bd15a55c396b4d8155f51a074b57b6",
+    "content-hash": "4744bc444c0f570067da5a48d8659f2f",
     "packages": [
         {
             "name": "brick/math",
@@ -436,6 +436,52 @@
                 }
             ],
             "time": "2021-10-11T09:18:27+00:00"
+        },
+        {
+            "name": "flavienbwk/blockchain-php",
+            "version": "1.0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flavienbwk/blockchain-php.git",
+                "reference": "034ee9dd130ce2a0c877e33a12f525457f5c3895"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flavienbwk/blockchain-php/zipball/034ee9dd130ce2a0c877e33a12f525457f5c3895",
+                "reference": "034ee9dd130ce2a0c877e33a12f525457f5c3895",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "flavienbwk\\BlockchainPHP\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Flavien Berwick",
+                    "email": "flavien@berwick.fr"
+                }
+            ],
+            "description": "An object-oriented PHP library for creating a blockchain easily.",
+            "homepage": "https://github.com/flavienbwk/blockchain-php",
+            "keywords": [
+                "OOP",
+                "blockchain",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/flavienbwk/blockchain-php/issues",
+                "source": "https://github.com/flavienbwk/blockchain-php/tree/master"
+            },
+            "time": "2018-06-23T23:31:48+00:00"
         },
         {
             "name": "fruitcake/php-cors",

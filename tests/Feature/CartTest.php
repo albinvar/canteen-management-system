@@ -117,4 +117,35 @@ class CartTest extends TestCase
             'id' => $cart->id,
         ]);
     }
+
+
+    //checkout
+    public function test_checkout(): void
+    {
+        $user = User::factory()->create();
+
+        $cart = Cart::factory(3)->create([
+            'user_id' => $user->id,
+            'quantity' => 2,
+        ]);
+
+        $response = $this->actingAs($user)->post(route('api.checkout'));
+
+        $response->assertStatus(201)
+            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+                ->has('order.id')
+                ->has('order.user_id')
+                ->has('order.payment_method')
+                ->has('order.total_price')
+                ->has('order.created_at')
+                ->has('order.updated_at')
+                ->has('order.order_items.0.id')
+                ->has('order.order_items.0.order_id')
+                ->has('order.order_items.0.date_based_product_id')
+                ->has('order.order_items.0.quantity')
+                ->has('order.order_items.0.price')
+                ->has('order.order_items.0.created_at')
+                ->has('order.order_items.0.updated_at')
+                ->etc());
+    }
 }

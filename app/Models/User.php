@@ -84,4 +84,10 @@ class User extends Authenticatable
         return $this->hasMany(Cart::class);
     }
 
+    //order_group relationship
+    public function order_group(): HasMany
+    {
+        return $this->hasMany(OrderGroup::class);
+    }
+
 }

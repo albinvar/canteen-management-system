@@ -23,9 +23,9 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function product(): BelongsTo
+    public function date_based_product(): BelongsTo
     {
-        return $this->belongsTo(DateBasedProduct::class);
+        return $this->belongsTo(DateBasedProduct::class, 'date_based_product_id');
     }
 
     public function getTotalPriceAttribute(): float|int
