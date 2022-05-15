@@ -20,7 +20,8 @@ class ProductPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        //check if user is admin
+        return $user->isAdmin();
     }
 
     /**
@@ -32,7 +33,8 @@ class ProductPolicy
      */
     public function view(User $user, Product $foodItem)
     {
-        //
+        //check if user is admin
+        return $user->isAdmin();
     }
 
     /**
@@ -56,7 +58,8 @@ class ProductPolicy
      */
     public function update(User $user, Product $foodItem)
     {
-        //
+        //check if user is admin
+        return $user->isAdmin();
     }
 
     /**
@@ -68,7 +71,8 @@ class ProductPolicy
      */
     public function delete(User $user, Product $foodItem)
     {
-        //
+        //check if user is admin
+        return $user->isAdmin();
     }
 
     /**
@@ -80,7 +84,8 @@ class ProductPolicy
      */
     public function restore(User $user, Product $foodItem)
     {
-        //
+        ///check if user is admin
+        return $user->isAdmin();
     }
 
     /**
@@ -92,6 +97,7 @@ class ProductPolicy
      */
     public function forceDelete(User $user, Product $foodItem)
     {
-        //
+        ///check if user is admin
+        return $user->isAdmin();
     }
 }
