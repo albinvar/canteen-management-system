@@ -7,6 +7,8 @@ use App\Http\Requests\StoreDateBasedFoodItemRequest;
 use App\Http\Requests\UpdateDateBasedFoodItemRequest;
 use App\Models\DateBasedProduct;
 use App\Models\Product;
+use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -38,7 +40,13 @@ class DateBasedProductController extends Controller
     public function getMenuWithDate(string $date): JsonResponse
     {
         try {
-            $dateBasedProducts = DateBasedProduct::where('date', $date)->toBase()->get();
+            $date = Carbon::parse($date)->format('Y-m-d');
+        } catch (InvalidFormatException $e) {
+            return response()->json(['ok' => false, 'message' => 'Invalid date format', 'timestamp' => now()], 400);
+        }
+
+        try {
+            $dateBasedProducts = DateBasedProduct::with('product.category')->where('date', $date)->get();
             return response()->json(['ok' => true, 'message' => "Successfully retrieved menu for $date", 'products' => $dateBasedProducts, 'timestamp' => now()], 201);
         } catch (Exception $e) {
             return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
