@@ -18,6 +18,11 @@ class DateBasedProduct extends Model
         'updated_by',
     ];
 
+    public $casts = [
+        'date' => 'date:Y-m-d',
+        'quantity' => 'integer',
+    ];
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

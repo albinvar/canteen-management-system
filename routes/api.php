@@ -36,7 +36,7 @@ Route::group(['as' => 'api.'], static function () {
     Route::apiResource('categories', CategoryController::class)->names('categories')->only('index', 'show');
     Route::get('categories/{category:slug}/products', [CategoryController::class, 'products'])->name('categories.products');
 
-    //daybased products
+    //date-based products
     Route::get('products/today', [DateBasedProductController::class, 'getTodaysMenu'])->name('products.today');
     Route::get('products/{date}', [DateBasedProductController::class, 'getMenuWithDate'])->name('products.date');
     Route::post('products/create', [DateBasedProductController::class, 'store'])->name('products.date.store');

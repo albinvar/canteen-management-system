@@ -12,6 +12,7 @@ use Psr\Log\LogLevel;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -66,6 +67,14 @@ class Handler extends ExceptionHandler
                 'timestamp' => now(),
             ], 404);
         }
+
+    if ($exception instanceof AuthorizationException) {
+        return response()->json([
+            'ok' => false,
+            'error' => 'This action is Unauthorized',
+            'timestamp' => now(),
+        ], 403);
+    }
 
         if ($exception instanceof MethodNotAllowedHttpException) {
             return response()->json([

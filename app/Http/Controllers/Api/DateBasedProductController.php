@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDateBasedFoodItemRequest;
+use App\Http\Requests\StoreDateBasedProductRequest;
 use App\Http\Requests\UpdateDateBasedFoodItemRequest;
 use App\Models\DateBasedProduct;
 use App\Models\Product;
@@ -54,24 +54,27 @@ class DateBasedProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param StoreDateBasedFoodItemRequest $request
-     * @return Response
+     * @param StoreDateBasedProductRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreDateBasedFoodItemRequest $request)
+    public function store(StoreDateBasedProductRequest $request): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        $validated['date'] = Carbon::parse($validated['date'])->format('Y-m-d');
+        //created_by is the user id of the user who created the product
+        $validated['created_by'] = auth()->id();
+        //updated_by is the user id of the user who updated the product
+        $validated['updated_by'] = auth()->id();
+
+        try {
+            $product = DateBasedProduct::create($validated);
+            return response()->json(['ok' => true, 'message' => 'Successfully added product to menu', 'product' => $product->load(['product.category']), 'timestamp' => now()], 201);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
