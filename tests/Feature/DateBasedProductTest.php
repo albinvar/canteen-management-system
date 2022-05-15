@@ -82,27 +82,65 @@ class DateBasedProductTest extends TestCase
 
     public function test_it_creates_a_date_based_product(): void
     {
-        $product = Product::factory()->create();
-        $category = Category::factory()->create();
+        //create a new admin user
+        $admin = User::factory()->create(['role_id' => 3]);
 
-        $response = $this->postJson(route('api.products.date', [
+        //act as user
+        $this->actingAs($admin);
+
+        $product = Product::factory()->create();
+        $dateBasedProduct = DateBasedProduct::factory()->make([
+            'product_id' => $product->id,
+            'date' => now()->addDay()->format('Y-m-d')
+        ]);
+
+        $response = $this->postJson(route('api.products.date.store', [
             'date' => now()->addDay()->format('Y-m-d'),
             'product_id' => $product->id,
             'quantity' => 10,
-            'category_id' => $category->id
+            'category_id' => $product->category_id
         ]));
 
         $response->assertStatus(201)
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
-                ->where('product.name', $product->name)
-                ->where('quantity', 10)
-                ->where('product.price', $product->price)
-                ->where('product.description', $product->description)
-                ->where('product.category_id', $product->category_id)
-                ->where('product.category.name', $product->category->name)
-                ->where('category_id', $category->id)
-                ->where('category.name', $category->name)
+                ->where('product.product.name', $product->name)
+                ->where('product.quantity', 10)
+                ->where('product.product.price', $product->price)
+                ->where('product.product.description', $product->description)
+                ->where('product.product.category_id', $product->category_id)
+                ->where('product.product.category.name', $product->category->name)
                 ->etc());
     }
 
+    //check if a user is not able to create a product.
+
+    public function test_it_does_not_create_a_date_based_product_if_not_admin(): void
+    {
+        $user = User::factory()->create([
+            'role_id' => 1
+        ]);
+
+        $this->actingAs($user);
+
+        $product = Product::factory()->create();
+        $dateBasedProduct = DateBasedProduct::factory()->make([
+            'product_id' => $product->id,
+            'date' => now()->addDay()->format('Y-m-d')
+        ]);
+
+        $response = $this->postJson(route('api.products.date.store', [
+            'date' => now()->addDay()->format('Y-m-d'),
+            'product_id' => $product->id,
+            'quantity' => 10,
+            'category_id' => $product->category_id
+        ]));
+
+        $response->assertStatus(403);
+
+        //assert that its not created in the database
+        $this->assertDatabaseMissing('date_based_products', [
+            'product_id' => $product->id,
+            'date' => now()->addDay()->format('Y-m-d')
+        ]);
+    }
 }
