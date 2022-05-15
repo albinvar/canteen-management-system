@@ -92,4 +92,26 @@ class ProductTest extends TestCase
                 ->has('message')
                 ->etc());
     }
+
+    /**
+     * Check if the products are listed on the index page.
+     *
+     * @return void
+     */
+    public function test_check_if_admin_is_able_to_view_the_products(): void
+    {
+        $user = User::factory()->create(['role_id' => 3]);
+
+        $this->actingAs($user);
+
+        // Create 10 products.
+        $products = Product::factory(10)->create();
+
+        $response = $this->getJson(route('api.admin.products.index'));
+
+        $response->assertStatus(200)
+            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+                ->has('message')
+                ->etc());
+    }
 }
