@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDateBasedProductRequest;
-use App\Http\Requests\UpdateDateBasedFoodItemRequest;
+use App\Http\Requests\UpdateDateBasedProductRequest;
 use App\Models\DateBasedProduct;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -89,26 +89,26 @@ class DateBasedProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param DateBasedProduct $dateBasedFoodItem
-     * @return Response
-     */
-    public function edit(DateBasedProduct $dateBasedFoodItem)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param UpdateDateBasedFoodItemRequest $request
-     * @param DateBasedProduct $dateBasedFoodItem
-     * @return Response
+     * @param UpdateDateBasedProductRequest $request
+     * @param DateBasedProduct $dateBasedProduct
+     * @return JsonResponse
      */
-    public function update(UpdateDateBasedFoodItemRequest $request, DateBasedProduct $dateBasedFoodItem)
+    public function update(UpdateDateBasedProductRequest $request, DateBasedProduct $dateBasedProduct): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        $validated['date'] = Carbon::parse($validated['date'])->format('Y-m-d');
+        //updated_by is the user id of the user who updated the product
+        $validated['updated_by'] = auth()->id();
+
+        try {
+            $dateBasedProduct->update($validated);
+            return response()->json(['ok' => true, 'message' => 'Successfully updated product', 'product' => $dateBasedProduct->load(['product.category']), 'timestamp' => now()], 201);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'timestamp' => now()], 500);
+        }
     }
 
     /**
