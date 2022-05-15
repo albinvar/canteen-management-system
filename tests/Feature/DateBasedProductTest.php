@@ -114,6 +114,9 @@ class DateBasedProductTest extends TestCase
 
     //check if a user is not able to create a product.
 
+    /**
+     * @return void
+     */
     public function test_it_does_not_create_a_date_based_product_if_not_admin(): void
     {
         $user = User::factory()->create([
@@ -128,19 +131,53 @@ class DateBasedProductTest extends TestCase
             'date' => now()->addDay()->format('Y-m-d')
         ]);
 
-        $response = $this->postJson(route('api.products.date.store', [
+        $response = $this->postJson(route('api.products.date.store'), [
             'date' => now()->addDay()->format('Y-m-d'),
             'product_id' => $product->id,
             'quantity' => 10,
             'category_id' => $product->category_id
-        ]));
+        ]);
 
         $response->assertStatus(403);
 
-        //assert that its not created in the database
+        //assert that it's not created in the database
         $this->assertDatabaseMissing('date_based_products', [
             'product_id' => $product->id,
             'date' => now()->addDay()->format('Y-m-d')
         ]);
+    }
+
+    //create a test to update a date based product.
+
+    public function test_it_updates_a_date_based_product(): void
+    {
+        $admin = User::factory()->create(['role_id' => 3]);
+
+        $this->actingAs($admin);
+
+        $product = Product::factory()->create();
+        $dateBasedProduct = DateBasedProduct::factory()->create([
+            'product_id' => $product->id,
+            'date' => now()->addDay()->format('Y-m-d')
+        ]);
+
+        $response = $this->putJson(route('api.products.date.update', [
+            'dateBasedProduct' => $dateBasedProduct->id,
+        ]), [
+            'date' => now()->addDay()->format('Y-m-d'),
+            'product_id' => $product->id,
+            'quantity' => 10,
+            'category_id' => $product->category_id
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+                ->where('product.product.name', $product->name)
+                ->where('product.quantity', 10)
+                ->where('product.product.price', $product->price)
+                ->where('product.product.description', $product->description)
+                ->where('product.product.category_id', $product->category_id)
+                ->where('product.product.category.name', $product->category->name)
+                ->etc());
     }
 }
