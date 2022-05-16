@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CheckoutPostRequest;
 use App\Models\Cart;
 use flavienbwk\BlockchainPHP\Blockchain;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use JsonException;
 
 class CheckoutController extends Controller
 {
     private int|float $sum = 0;
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
-    public function checkout(Request $request)
+    public function checkout(Request $request): JsonResponse
     {
-
         //get all items from cart
         $items = auth()->user()->cart;
 
@@ -31,7 +31,6 @@ class CheckoutController extends Controller
 
         //check if user has enough balance
         $balance = $this->balance();
-        dump($balance, $this->sum);
 
         //check if user has enough balance
         if ($balance < $this->sum) {
@@ -49,7 +48,6 @@ class CheckoutController extends Controller
             'uuid' => Str::uuid(),
         ]);
 
-        /** @var TYPE_NAME $ids */
         $ids = [];
 
         //create a new order for each item
@@ -66,14 +64,11 @@ class CheckoutController extends Controller
         //empty cart
         auth()->user()->cart()->delete();
 
-        $this->balance();
-
         //write to blockchain
         $blockchain = new Blockchain();
         $transactions = [
             'from_user_id' => 1,
             'to_user_id' => auth()->id(),
-//            'amount' => $order_group->orders->sum('price'),
             'amount' => $this->sum,
             'amount_type' => '-',
             'type' => 'order',
@@ -92,6 +87,7 @@ class CheckoutController extends Controller
             return response()->json([
                 'ok' => true,
                 'message' => 'Order placed successfully',
+                'balance' => $balance,
                 'orders' => $order_group->load('orders'),
             ], 201);
         }
@@ -104,7 +100,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function validateTransaction($block, $transactions): bool
     {
@@ -112,8 +108,11 @@ class CheckoutController extends Controller
     }
 
     //calculate user balance from blockchain
-    private function balance()
+    /**
+     * @throws JsonException
+     */
+    public function balance()
     {
-       return (new WalletController())->balance() ?? 0;
+       return (new WalletController())->balance();
     }
 }

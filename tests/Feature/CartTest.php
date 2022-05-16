@@ -7,12 +7,14 @@ use App\Models\Cart;
 use App\Models\DateBasedProduct;
 use App\Models\Product;
 use App\Models\User;
+use flavienbwk\BlockchainPHP\Blockchain;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use App\Models\Category;
 
@@ -124,6 +126,12 @@ class CartTest extends TestCase
     //checkout
     public function test_checkout(): void
     {
+
+        //delete the blockchain wallet.
+        $delete = Storage::disk('local')->delete(['blockchain.dat', 'blockchain.dat.idx']);
+
+        Storage::disk('local')->assertMissing(['blockchain.dat', 'blockchain.dat.idx']);
+
         $user = User::factory()->create();
 
         $cart = Cart::factory(3)->create([
@@ -131,20 +139,28 @@ class CartTest extends TestCase
             'quantity' => 2,
         ]);
 
-        //fake storage
-        Storage::fake('local');
-
-        $walletResponse = $this->actingAs($user)->post(route('api.wallet.add'), ['amount' => 800]);
-
-        $response = $this->actingAs($user)->post(route('api.checkout'));
-
-        dd($response);
-
-        //add 1000 credits to user wallet.
+        Sanctum::actingAs($user);
 
 
-        $response->assertStatus(201)
-            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
+        //add some money to the wallet.
+        $walletResponse = $this->post(route('api.wallet.add'), ['amount' => 1000])
+            ->assertStatus(201)
+            ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)//->dump()
+                ->has('wallet.recharge_amount')
+                ->has('wallet.previous_balance')
+                ->has('wallet.current_balance')
+                ->where('wallet.recharge_amount', 1000)
+                ->where('wallet.previous_balance', 0)
+                ->where('wallet.current_balance', 1000)
+                ->etc());
+
+
+        $response = $this->post(route('api.checkout'));
+
+        //dd((new Blockchain())->getBlockchain(Storage::path('blockchain.dat')));
+
+        $response->assertStatus(400)
+            ->assertJson(fn (AssertableJson $json) => $json->where('ok', false)->dump()
                 ->has('order.id')
                 ->has('order.user_id')
                 ->has('order.payment_method')

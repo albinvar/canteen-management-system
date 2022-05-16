@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDateBasedProductRequest;
 use App\Http\Requests\UpdateDateBasedProductRequest;
 use App\Models\DateBasedProduct;
-use App\Models\Product;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Exception;
@@ -18,9 +17,9 @@ class DateBasedProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
         //
     }
@@ -59,7 +58,7 @@ class DateBasedProductController extends Controller
      * @param StoreDateBasedProductRequest $request
      * @return JsonResponse
      */
-    public function store(StoreDateBasedProductRequest $request): JsonResponse
+    public function create(StoreDateBasedProductRequest $request): JsonResponse
     {
         $validated = $request->validated();
 

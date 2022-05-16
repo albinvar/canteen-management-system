@@ -38,13 +38,14 @@ Route::group(['as' => 'api.'], static function () {
     //create a resource for categories
     Route::apiResource('categories', CategoryController::class)->names('categories')->only('index', 'show');
     Route::get('categories/{category:slug}/products', [CategoryController::class, 'products'])->name('categories.products');
-
     //date-based products
+    Route::post('products/create', [DateBasedProductController::class, 'create'])->name('products.date.create');
     Route::get('products/today', [DateBasedProductController::class, 'getTodaysMenu'])->name('products.today');
     Route::get('products/{date}', [DateBasedProductController::class, 'getMenuWithDate'])->name('products.date');
-    Route::post('products/create', [DateBasedProductController::class, 'store'])->name('products.date.store');
     Route::put('products/{dateBasedProduct}', [DateBasedProductController::class, 'update'])->name('products.date.update');
     Route::delete('products/{dateBasedProduct}', [DateBasedProductController::class, 'destroy'])->name('products.date.destroy');
+
+    Route::group(['middleware' => 'auth:sanctum'], static function () {
 
     //cart endpoints.
     Route::get('cart', [CartController::class, 'index'])->name('cart.index');
@@ -55,6 +56,8 @@ Route::group(['as' => 'api.'], static function () {
     Route::post('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
     //Route::get('wallet', [WalletController::class, 'main'])->name('wallet');
     Route::post('wallet', [WalletController::class, 'recharge'])->name('wallet.add');
+
+    });
 
     //create a resource for products
     Route::group(['as' => 'admin.', 'middleware' => 'auth:sanctum'], static function () {

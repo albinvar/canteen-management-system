@@ -11,10 +11,15 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'product_id',
         'quantity',
         'total',
         'uuid',
         'price',
     ];
+
+    // date based product id
+    public function date_based_product()
+    {
+        return $this->belongsTo(DateBasedProduct::class);
+    }
 }

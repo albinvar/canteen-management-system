@@ -94,11 +94,10 @@ class DateBasedProductTest extends TestCase
             'date' => now()->addDay()->format('Y-m-d')
         ]);
 
-        $response = $this->postJson(route('api.products.date.store', [
+        $response = $this->postJson(route('api.products.date.create', [
             'date' => now()->addDay()->format('Y-m-d'),
             'product_id' => $product->id,
             'quantity' => 10,
-            'category_id' => $product->category_id
         ]));
 
         $response->assertStatus(201)
@@ -131,7 +130,7 @@ class DateBasedProductTest extends TestCase
             'date' => now()->addDay()->format('Y-m-d')
         ]);
 
-        $response = $this->postJson(route('api.products.date.store'), [
+        $response = $this->postJson(route('api.products.date.create'), [
             'date' => now()->addDay()->format('Y-m-d'),
             'product_id' => $product->id,
             'quantity' => 10,

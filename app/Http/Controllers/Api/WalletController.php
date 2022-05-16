@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WalletPostRequest;
 use flavienbwk\BlockchainPHP\Blockchain;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -23,7 +24,7 @@ class WalletController extends Controller
     public function __construct(string $path=null)
     {
         $this->middleware('auth:sanctum');
-        $this->path = $path ?? Storage::disk('local')->path('/blockchain.dat');
+        $this->path = $path ?? Storage::disk('local')->path('blockchain.dat');
         $this->blockchainInstance = new Blockchain();
         $this->checkIfBlockchainExists();
     }
@@ -37,7 +38,6 @@ class WalletController extends Controller
     public function getBlockchainCollection(): Collection
     {
         $blockchain = $this->blockchainInstance->getBlockchain($this->path);
-        dump($blockchain);
         return collect(json_decode($blockchain, true, 512, JSON_THROW_ON_ERROR));
     }
 
@@ -70,7 +70,7 @@ class WalletController extends Controller
      * @throws ValidationException
      * @throws JsonException
      */
-    public function recharge(WalletPostRequest $request): bool
+    public function recharge(WalletPostRequest $request): JsonResponse
     {
         $balance = $this->balance();
         $amount = $request->amount;
@@ -88,7 +88,27 @@ class WalletController extends Controller
             'order_ids' => null,
             'uuid' => Str::uuid(),
         ];
-      return $this->blockchainInstance->addBlock($this->path , json_encode($transactions, JSON_THROW_ON_ERROR))->hasError();
+      $result = $this->blockchainInstance->addBlock($this->path , json_encode($transactions, JSON_THROW_ON_ERROR));
+
+      if ($result->hasError()) {
+          return response()->json([
+              'ok' => false,
+              'message' => 'Failed to recharge wallet',
+              'wallet' => ['previous_balance' => $balance,
+              'updated_balance' => null,
+              'recharge_amount' => 0]
+          ], 500);
+      }
+        return response()->json([
+            'ok' => true,
+            'message' => 'Recharge successful',
+            'wallet' => [ 'previous_balance' => $balance,
+                'current_balance' => $balance + $amount,
+                'recharge_amount' => $amount]
+        ], 201);
+
+
+
     }
 
 //    //create a method called withdraw
@@ -178,7 +198,7 @@ class WalletController extends Controller
     /**
      * @throws JsonException
      */
-    private function checkIfBlockchainExists()
+    public function checkIfBlockchainExists(): WalletController
     {
         if (! Storage::disk('local')->exists('blockchain.dat')) {
             $array = [
@@ -193,5 +213,7 @@ class WalletController extends Controller
             ];
             $this->blockchainInstance->addBlock(Storage::disk('local')->path('/blockchain.dat'), json_encode($array, JSON_THROW_ON_ERROR));
         }
+
+        return $this;
     }
 }
