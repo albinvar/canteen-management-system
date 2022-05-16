@@ -30,7 +30,7 @@ class Cart extends Model
 
     public function getTotalPriceAttribute(): float|int
     {
-        return $this->quantity * $this->product->price;
+        return $this->quantity * $this->date_based_product->product->price;
     }
 
     public function getTotalPriceFormattedAttribute(): string

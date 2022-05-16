@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\Api\WalletController;
 use App\Models\Cart;
 use App\Models\DateBasedProduct;
 use App\Models\Product;
@@ -10,6 +11,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 use App\Models\Category;
@@ -129,7 +131,17 @@ class CartTest extends TestCase
             'quantity' => 2,
         ]);
 
+        //fake storage
+        Storage::fake('local');
+
+        $walletResponse = $this->actingAs($user)->post(route('api.wallet.add'), ['amount' => 800]);
+
         $response = $this->actingAs($user)->post(route('api.checkout'));
+
+        dd($response);
+
+        //add 1000 credits to user wallet.
+
 
         $response->assertStatus(201)
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\DateBasedProductController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\WalletController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,8 @@ Route::group(['as' => 'api.'], static function () {
     Route::put('cart/{cart}', [CartController::class, 'update'])->name('cart.update');
 
     Route::post('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    //Route::get('wallet', [WalletController::class, 'main'])->name('wallet');
+    Route::post('wallet', [WalletController::class, 'recharge'])->name('wallet.add');
 
     //create a resource for products
     Route::group(['as' => 'admin.', 'middleware' => 'auth:sanctum'], static function () {
