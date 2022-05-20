@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
-use flavienbwk\BlockchainPHP\Blockchain;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -97,22 +96,5 @@ class CheckoutController extends Controller
             'message' => 'Order failed',
         ], 500);
 
-    }
-
-    /**
-     * @throws JsonException
-     */
-    private function validateTransaction($block, $transactions): bool
-    {
-        return $block->getData() === json_encode($transactions, JSON_THROW_ON_ERROR);
-    }
-
-    //calculate user balance from blockchain
-    /**
-     * @throws JsonException
-     */
-    public function balance()
-    {
-       return (new WalletController())->balance();
     }
 }
