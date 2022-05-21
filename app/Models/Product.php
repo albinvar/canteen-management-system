@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use Bavix\Wallet\Interfaces\Customer;
+use Bavix\Wallet\Interfaces\ProductInterface;
+use Bavix\Wallet\Traits\HasWallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Product extends Model
+class Product extends Model implements ProductInterface
 {
-    use HasFactory;
+    use HasFactory, HasWallet;
 
     protected $fillable = [
         'name',
@@ -52,6 +55,24 @@ class Product extends Model
     {
         // need work.
         return $this->reviews->avg('rating');
+    }
+
+    public function getAmountProduct(Customer $customer): int|string
+    {
+        return $this->price;
+    }
+
+    public function getMetaProduct(): ?array
+    {
+        return [
+            'title' => $this->name,
+            'description' => 'Purchase of Product #' . $this->id,
+        ];
+    }
+
+    public function getFeePercent()
+    {
+        return 0.03; // 3%
     }
 
 }

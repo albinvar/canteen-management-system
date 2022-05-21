@@ -55,7 +55,9 @@ Route::group(['as' => 'api.'], static function () {
 
     Route::post('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
     //Route::get('wallet', [WalletController::class, 'main'])->name('wallet');
-    Route::post('wallet', [WalletController::class, 'recharge'])->name('wallet.add');
+    Route::post('wallet/credit', [WalletController::class, 'deposit'])->name('wallet.deposit');
+    Route::post('wallet/debit', [WalletController::class, 'withdraw'])->name('wallet.withdraw');
+    Route::get('wallet', [WalletController::class, 'show'])->name('wallet.show');
 
     });
 
