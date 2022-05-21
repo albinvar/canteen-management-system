@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Bavix\Wallet\Interfaces\Customer;
+use Bavix\Wallet\Interfaces\MinimalTaxable;
 use Bavix\Wallet\Interfaces\ProductInterface;
+use Bavix\Wallet\Interfaces\Taxable;
 use Bavix\Wallet\Traits\HasWallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -57,9 +59,18 @@ class Product extends Model implements ProductInterface
         return $this->reviews->avg('rating');
     }
 
-    public function getAmountProduct(Customer $customer): int|string
+    public function canBuy(Customer $customer, int $quantity = 1, bool $force = false): bool
     {
-        return $this->price;
+        /**
+         * If the service can be purchased once, then
+         *  return !$customer->paid($this);
+         */
+        return true;
+    }
+
+    public function getAmountProduct(Customer $customer, $quantity = 1): int|string
+    {
+        return (round($this->price) * $quantity);
     }
 
     public function getMetaProduct(): ?array
@@ -70,9 +81,14 @@ class Product extends Model implements ProductInterface
         ];
     }
 
-    public function getFeePercent()
-    {
-        return 0.03; // 3%
-    }
+//    public function getFeePercent(): float
+//    {
+//        return 0.03; // 3%
+//    }
+//
+//    public function getMinimalFee(): int
+//    {
+//        return 5; // 3%, minimum 5
+//    }
 
 }

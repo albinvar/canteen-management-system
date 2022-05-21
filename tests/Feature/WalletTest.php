@@ -71,7 +71,7 @@ class WalletTest extends TestCase
             ->assertJson(fn (AssertableJson $json) => $json->where('ok', true)
                 ->has('message')
                 ->where('wallet.balance', $user->balance)
-                ->where('wallet.balance',  '100')
+                ->where('balance',  $user->balance)
                 ->where('wallet.holder.id', $user->id)
                 ->etc());
     }

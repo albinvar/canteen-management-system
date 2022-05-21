@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('date_based_product_id')->constrained('date_based_products');
             $table->foreignId('order_group_id')->constrained('order_groups');
             $table->integer('quantity');
             $table->decimal('price', 8, 2);

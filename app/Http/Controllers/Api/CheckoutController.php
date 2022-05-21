@@ -20,74 +20,63 @@ class CheckoutController extends Controller
      */
     public function checkout(Request $request): JsonResponse
     {
+        $user = auth()->user();
+
         //get all items from cart
-        $items = auth()->user()->cart;
+        $items = $user->cart;
 
         //calculate total sum of all items
         foreach ($items as $item) {
-            $this->sum += $item->total_price;
+            $this->sum += $item->date_based_product->product->getAmountProduct($user, $item->quantity);
         }
 
-        //check if user has enough balance
-        $balance = $this->balance();
-
-        //check if user has enough balance
-        if ($balance < $this->sum) {
+        if ($this->sum > $user->balance) {
             return response()->json([
                 'ok' => false,
                 'message' => 'You don\'t have enough balance',
-                'balance' => $balance,
+                'balance' => $user->balance,
                 'sum' => $this->sum,
                 'timestamp' => now(),
             ], 400);
         }
 
         //create a new order_group
-        $order_group = auth()->user()->order_group()->create([
+        $order_group = $user->order_group()->create([
             'uuid' => Str::uuid(),
         ]);
 
-        $ids = [];
-
         //create a new order for each item
         foreach ($items as $item) {
-            $ids[] = $item->id;
             $order = $order_group->orders()->create([
                 'uuid' => Str::uuid(),
-                'user_id' => auth()->id(),
+                'user_id' => $user->id,
                 'quantity' => $item->quantity,
+                'date_based_product_id' => $item->date_based_product_id,
                 'price' => $item->date_based_product->product->price,
             ]);
+
+            foreach (range(1, $item->quantity) as $i) {
+                 $user->pay($order->date_based_product->product);
+            }
         }
 
         //empty cart
-        auth()->user()->cart()->delete();
-
-        //write to blockchain
-        $blockchain = new Blockchain();
-        $transactions = [
-            'from_user_id' => 1,
-            'to_user_id' => auth()->id(),
-            'amount' => $this->sum,
-            'amount_type' => '-',
-            'type' => 'order',
-            'order_group_id' => $order_group->id,
-            'order_ids' => $ids,
-            'uuid' => Str::uuid(),
-        ];
-        $block = $blockchain->addBlock(Storage::disk('local')->path('/blockchain.dat'), json_encode($transactions, JSON_THROW_ON_ERROR));
+        $user->cart()->delete();
 
         //updated cart
         $cart = Cart::where('user_id', auth()->id())
             ->get();
 
         //check if cart is empty
-        if ($cart->isEmpty() && $this->validateTransaction($block, $transactions)) {
+        if ($cart->isEmpty()) {
             return response()->json([
                 'ok' => true,
                 'message' => 'Order placed successfully',
-                'balance' => $balance,
-                'orders' => $order_group->load('orders'),
+                'balance' => $user->balance,
+                'sum' => $this->sum,
+                'tax' => $this->sum * 0.03,
+                'order_group' => $order_group->load('orders'),
+                'timestamp' => now(),
             ], 201);
         }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
@@ -11,6 +12,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+        'date_based_product_id',
         'quantity',
         'total',
         'uuid',
@@ -18,7 +20,7 @@ class Order extends Model
     ];
 
     // date based product id
-    public function date_based_product()
+    public function date_based_product(): BelongsTo
     {
         return $this->belongsTo(DateBasedProduct::class);
     }

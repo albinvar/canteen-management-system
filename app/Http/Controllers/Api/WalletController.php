@@ -14,9 +14,9 @@ class WalletController extends Controller
     {
         try {
             $wallet = auth()->user()->wallet;
-            return response()->json(['ok' => true,  'message' => "Successfully retrieved details", 'wallet' => $wallet, 'timestamp' => now()],200);
+            return response()->json(['ok' => true,  'message' => "Successfully retrieved details", 'balance' => auth()->user()->balance, 'wallet' => $wallet, 'timestamp' => now()],200);
         } catch (Exception $e) {
-            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'wallet' => null, 'timestamp' => now()], 500);
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'balance' => auth()->user()->balance, 'wallet' => null, 'timestamp' => now()], 500);
         }
     }
 
@@ -29,13 +29,13 @@ class WalletController extends Controller
         try {
             $user = auth()->user();
             $user->deposit($amount);
-            return response()->json(['ok' => true,  'message' => "Successfully deposited $amount to your wallet", 'wallet' => $user->wallet, 'credited_amount' => $amount, 'timestamp' => now()],201);
+            return response()->json(['ok' => true,  'message' => "Successfully deposited $amount to your wallet", 'balance' => $user->balance, 'wallet' => $user->wallet, 'credited_amount' => $amount, 'timestamp' => now()],201);
         } catch (Exception $e) {
-            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'wallet' => null, 'timestamp' => now()], 500);
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'balance' => $user->balance, 'wallet' => null, 'timestamp' => now()], 500);
         }
     }
 
-    //create a withdraw method
+    //create a withdrawal method
     public function withdraw(Request $request): JsonResponse
     {
         //will be used to validate the request.
@@ -44,10 +44,11 @@ class WalletController extends Controller
         try {
             $user = auth()->user();
             $user->withdraw($amount);
-            return response()->json(['ok' => true,  'message' => "Successfully withdrew $amount from your wallet", 'wallet' => $user->wallet, 'debited_amount' => $amount, 'timestamp' => now()],201);
+            return response()->json(['ok' => true,  'message' => "Successfully withdrew $amount from your wallet", 'balance' => $user->balance, 'wallet' => $user->wallet, 'debited_amount' => $amount, 'timestamp' => now()],201);
         } catch (Exception $e) {
-            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'wallet' => $user->wallet, 'timestamp' => now()], 500);
+            return response()->json(['ok' => false, 'message' => $e->getMessage(), 'wallet' => $user->wallet, 'balance' => $user->balance, 'timestamp' => now()], 500);
         }
     }
+
 
 }
