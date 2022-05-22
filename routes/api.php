@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\DateBasedProductController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\WalletController;
 use Illuminate\Http\Request;
@@ -26,6 +27,8 @@ Route::group(['as' => 'api.'], static function () {
     //Basic Auth Routes
     Route::post('login', [AuthController::class, 'login'])->name('login');
     Route::post('register', [AuthController::class, 'register'])->name('register');
+
+    Route::post('payment', [PaymentController::class, 'store'])->name('payment.store');
 
 
     Route::group(['middleware' => 'auth:sanctum'], static function () {
@@ -58,6 +61,7 @@ Route::group(['as' => 'api.'], static function () {
     Route::post('wallet/credit', [WalletController::class, 'deposit'])->name('wallet.deposit');
     Route::post('wallet/debit', [WalletController::class, 'withdraw'])->name('wallet.withdraw');
     Route::get('wallet', [WalletController::class, 'show'])->name('wallet.show');
+    //Route::post('payment', [PaymentController::class, 'show'])->name('payment.store');
 
     });
 
