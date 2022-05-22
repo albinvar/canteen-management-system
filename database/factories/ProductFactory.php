@@ -25,7 +25,7 @@ class ProductFactory extends Factory
             'description' => $this->faker->sentence,
             'category_id' => Category::factory()->create()->id,
             'slug' => $this->faker->unique()->slug,
-            'price' => $this->faker->randomFloat(2, 1, 100),
+            'price' => round($this->faker->randomFloat(2, 1, 100)),
             'image' => $this->faker->imageUrl(),
             'created_by' => User::factory()->create()->id,
         );

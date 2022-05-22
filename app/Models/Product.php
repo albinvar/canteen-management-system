@@ -29,7 +29,7 @@ class Product extends Model implements ProductInterface
     protected $casts = [
         'id' => 'integer',
         'category_id' => 'integer',
-        'price' => 'float'
+        'price' => 'integer'
     ];
 
     public function category(): BelongsTo
