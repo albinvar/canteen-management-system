@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\DateBasedProductController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\WalletController;
@@ -56,8 +57,12 @@ Route::group(['as' => 'api.'], static function () {
     Route::delete('cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::put('cart/{cart}', [CartController::class, 'update'])->name('cart.update');
 
+    //order endpoints.
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::put('orders/{order}', [OrderController::class, 'update'])->name('orders.update');
+
     Route::post('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
-    //Route::get('wallet', [WalletController::class, 'main'])->name('wallet');
     Route::post('wallet/credit', [WalletController::class, 'deposit'])->name('wallet.deposit');
     Route::post('wallet/debit', [WalletController::class, 'withdraw'])->name('wallet.withdraw');
     Route::get('wallet', [WalletController::class, 'show'])->name('wallet.show');

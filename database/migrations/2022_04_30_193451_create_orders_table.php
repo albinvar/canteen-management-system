@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreignId('order_group_id')->constrained('order_groups');
             $table->integer('quantity');
             $table->decimal('price', 8, 2);
+            $table->string('payment_method')->nullable();
+            $table->string('payment_status')->nullable();
             $table->timestamps();
         });
     }

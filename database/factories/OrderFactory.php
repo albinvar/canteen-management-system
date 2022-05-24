@@ -26,6 +26,7 @@ class OrderFactory extends Factory
             'order_group_id' => OrderGroup::factory()->create()->id,
             'payment_method' => $this->faker->randomElement(['cash', 'credit_card']),
             'payment_status' => $this->faker->randomElement(['pending', 'paid', 'cancelled']),
+            'uuid' => $this->faker->uuid,
         ];
     }
 }

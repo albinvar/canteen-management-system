@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -25,5 +26,11 @@ class Order extends Model
     public function date_based_product(): BelongsTo
     {
         return $this->belongsTo(DateBasedProduct::class);
+    }
+
+    // order statuses
+    public function order_status(): HasMany
+    {
+        return $this->hasMany(OrderStatus::class);
     }
 }

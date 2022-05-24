@@ -19,8 +19,6 @@ return new class extends Migration
             $table->integer('status');
             $table->text('comment')->nullable();
             $table->foreignId('processed_by')->nullable()->constrained('users');
-            $table->string('payment_method')->nullable();
-            $table->string('payment_status')->nullable();
             $table->timestamps();
         });
     }

@@ -94,4 +94,10 @@ class User extends Authenticatable implements Wallet, Customer
         return $this->hasMany(OrderGroup::class);
     }
 
+    //orders relation
+    public function orders()
+    {
+        return $this->order_group()->hasMany(Order::class);
+    }
+
 }
