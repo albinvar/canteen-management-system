@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\OrderGroup;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\OrderGroup>
+ * @extends Factory
  */
 class OrderGroupFactory extends Factory
 {
@@ -17,7 +19,8 @@ class OrderGroupFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => User::factory()->create()->id,
+            'uuid' => $this->faker->uuid,
         ];
     }
 }

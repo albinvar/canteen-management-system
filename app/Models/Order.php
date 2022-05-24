@@ -14,9 +14,11 @@ class Order extends Model
         'user_id',
         'date_based_product_id',
         'quantity',
-        'total',
-        'uuid',
         'price',
+        'uuid',
+        'order_group_id',
+        'payment_method',
+        'payment_status',
     ];
 
     // date based product id

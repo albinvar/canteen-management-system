@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class OrderStatus extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'order_id',
+        'status',
+        'comment',
+        'processed_by',
+    ];
 }
