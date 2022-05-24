@@ -49,11 +49,11 @@ class OrderController extends Controller
      * Display the specified resource.
      *
      * @param Order $order
-     * @return Response
+     * @return JsonResponse
      */
     public function show(Order $order)
     {
-        return response()->json(['ok' => true, 'message' => "Order retrieved successfully", 'data' => $order->load('order_status'), 'timestamp' => now()], 201);
+        return response()->json(['ok' => true, 'message' => "Order retrieved successfully", 'data' => $order->load('order_status'), 'timestamp' => now()], 200);
     }
 
     /**

@@ -23,7 +23,7 @@ class CheckoutController extends Controller
         $user = auth()->user();
 
         //get all items from cart
-        $items = $user->cart;
+        $items = $user->cart->load('date_based_product.product');
 
         //calculate total sum of all items
         foreach ($items as $item) {
