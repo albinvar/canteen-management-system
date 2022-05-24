@@ -5,7 +5,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/albinvar/canteen-management-system">
-    <img src="https://i.ibb.co/F5qdVDY/undraw-breakfast-psiw-removebg-preview.png" alt="Logo" width="600" height="200">
+    <img src="https://i.ibb.co/F5qdVDY/undraw-breakfast-psiw-removebg-preview.png" alt="Logo" height="200">
   </a>
   
   <h3 align="center">Canteen Management System</h3>
